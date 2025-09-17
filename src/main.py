@@ -3,7 +3,7 @@ import pathlib
 from datetime import datetime
 from enum import Enum
 
-from src.logs import LogReader
+from src.files import FileReader
 from src.reports import AbstractReporter, ReportAggregator, StudentPerformanceReporter
 
 
@@ -30,7 +30,7 @@ class ReportTypeEnum(Enum):
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="StudentPerformance",
-        description="Create an in-console report of the provided log files",
+        description="Create an in-console report of the provided files",
         epilog="Text at the bottom of help",
     )
 
@@ -88,11 +88,11 @@ def main() -> None:
     args = parser.parse_args()
     arg_handler = ArgHandler(args)
 
-    log_reader = LogReader(arg_handler.file_paths, arg_handler.dir_paths)
+    file_reader = FileReader(arg_handler.file_paths, arg_handler.dir_paths)
 
     filters = {"date": arg_handler.date} if arg_handler.date else None
     report_aggregator = ReportAggregator(
-        log_reader=log_reader,
+        file_reader=file_reader,
         reporter_classes=(arg_handler.reporter,),
         filters=filters,
     )

@@ -8,7 +8,7 @@ from tabulate import tabulate
 
 from src.common_types import ReportT
 from src.dto import DTOType, StudentDTO
-from src.logs import LogReader
+from src.files import FileReader
 
 FilterT = Mapping[str, str | datetime]
 
@@ -16,11 +16,11 @@ FilterT = Mapping[str, str | datetime]
 class ReportAggregator:
     def __init__(
         self,
-        log_reader: LogReader,
+        file_reader: FileReader,
         reporter_classes: tuple[type["ReporterType"], ...],
         filters: FilterT | None
     ) -> None:
-        self.log_reader = log_reader
+        self.file_reader = file_reader
         self.reporter_classes = reporter_classes
         self.reports: list[ReportT] = []
 
@@ -38,7 +38,7 @@ class ReportAggregator:
         if del_prev_reports:
             self.reports = []
 
-        for dto in self.log_reader.read_one():
+        for dto in self.file_reader.read_one():
             for reporter in self.reporters:
                 reporter.add_to_report(dto)
         

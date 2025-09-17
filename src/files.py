@@ -5,7 +5,7 @@ from pathlib import Path
 from src.dto import BaseModel, StudentDTO
 
 
-class LogReader:
+class FileReader:
     accepted_file_types = ('.csv', )
 
     def __init__(

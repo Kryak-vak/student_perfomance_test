@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from src.dto import StudentDTO
-from src.logs import LogReader
+from src.files import FileReader
 from src.reports import ReportAggregator, StudentPerformanceReporter
 
 
@@ -12,8 +12,8 @@ def date_filter(request):
     return request.param
 
 
-def test_log_reader(tmp_csv):
-    reader = LogReader(file_paths=[tmp_csv])
+def test_file_reader(tmp_csv):
+    reader = FileReader(file_paths=[tmp_csv])
     rows = list(reader.read_one())
     
     assert len(rows) == 3
@@ -24,7 +24,7 @@ def test_log_reader(tmp_csv):
 
 
 def test_student_performance_report(tmp_csv, date_filter):
-    reader = LogReader(file_paths=[tmp_csv])
+    reader = FileReader(file_paths=[tmp_csv])
     filters = {"date": date_filter} if date_filter else None
     reporter = StudentPerformanceReporter(filters=filters)
 
@@ -44,10 +44,10 @@ def test_student_performance_report(tmp_csv, date_filter):
 
 
 def test_report_aggregator(tmp_csv, date_filter):
-    reader = LogReader(file_paths=[tmp_csv])
+    file_reader = FileReader(file_paths=[tmp_csv])
     filters = {"date": date_filter} if date_filter else None
     aggregator = ReportAggregator(
-        log_reader=reader,
+        file_reader=file_reader,
         reporter_classes=(StudentPerformanceReporter,),
         filters=filters
     )
